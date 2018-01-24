@@ -18,6 +18,8 @@ Pablo Escobar Lopez
 
 sciCORE / UniBasel / SIB
 
+[https://pescobar.github.io/easybuild-user-meeting-slides/](https://pescobar.github.io/easybuild-user-meeting-slides/)
+
 ---
 
 # Agenda
@@ -33,7 +35,7 @@ sciCORE / UniBasel / SIB
 
   * Linux/HPC systems engineer
 
-  * EasyBuild user since 2014?
+  * EasyBuild user since ... 2014?
 
   * Easybuild contributor
 
@@ -45,17 +47,29 @@ sciCORE / UniBasel / SIB
 
 # My Cluster
 
-* Near ~8k cpus
-  * Multiple CPU generations
+  * Scientific computing facility at the University of Basel
+  
+  * Near ~8k x86_64 CPUs (multiple cpu generations)
 
-* Infiniband 
-  * Multiple infiniband islands
+  * Infiniband networking (multiple infiniband islands)
 
-* 3.5PB storage
-  * GPFS
-  * BeeGFS
+  * 3.5PB storage
+    * GPFS
+    * BeeGFS
 
-* Many different workloads (bioinfo, physics, chemistry, economics...
+  * Some GPUs
+  
+  * CentOS 7
+---
+
+# My Cluster
+
+
+  * Around ~1k user accounts
+
+  * Between 50 to 100 different active users every day
+
+  * Many different workloads (bioinfo, physics, chemistry, economics...
 
 ---
 
@@ -68,7 +82,7 @@ sciCORE / UniBasel / SIB
 1475
 ```
 
-### Lmod
+### Lmod for modules management
 
 ```terminal
 [user@scicore ~]$ ml -v
@@ -77,24 +91,39 @@ Modules based on Lua: Version 7.4.5  2017-04-04 08:58 -07:00
     by Robert McLay mclay@tacc.utexas.edu
 ```
 
+---
+
+# EasyBuild setup
+  
+  * Two dedicated accounts for easybuild
+
+    * easybuild user: Test and Development
+
+    * soft user: Deployments to production
+  
+  * `eb --optarch=GENERIC`
+
+  * Main toolchains `goolf/1.7.20` and `intel/2017.01`
+
+  * RPATH enabled by default
+---
+
+# EasyBuild setup
+
+We use gitlab too keep track of installed easyconfigs and notify the admins about new software installations
+
+![:scale 70%](img/gitlab-easybuild.png) 
+
+---
+
   </textarea>
   <script src="js/vendor/remark.min.js"></script>
   <script src="js/vendor/jquery-3.2.1.min.js"></script>
   <script src="js/terminal.language.js"></script>
   <script src="js/common.js"></script>
-
-  <script type="text/javascript">
-    var hljs = remark.highlighter.engine;
-  </script>
-  <script type="text/javascript">
-    var slideshow = remark.create({
-      highlightStyle: 'monokai'
-    });
-    // extract the embedded styling from ansi spans
-    $('code.terminal span.hljs-ansi').replaceWith(function(i, x) {
-      return x.replace(/&lt;(\/?(\w+).*?)&gt;/g, '<$1>')
-    });
   </script>
 
   </body>
 </html>
+
+# vim: filetype=markdown syntax=markdown tabstop=2 shiftwidth=2 expandtab
