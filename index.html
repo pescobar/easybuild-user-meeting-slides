@@ -26,12 +26,15 @@ sciCORE / UniBasel / SIB
 
 1. Who I am
 2. My cluster
+3. My EasyBuild Setup
+4. RPATH
+5. Questions / Discussion
 
 ---
 
 # Who I am 
 
-  * Pablo Escobar .... ¡Plata o plomo!
+  * Pablo Escobar Lopez
 
   * Linux/HPC systems engineer
 
@@ -116,15 +119,55 @@ We use gitlab too keep track of installed easyconfigs and notify the admins abou
 
 ---
 
+# What is RPATH
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Rpath)
+
+```text
+In computing, rpath designates the run-time search path hard-coded 
+in an executable file or library. Dynamic linking loaders use the 
+rpath to find required libraries.
+
+Specifically it encodes a path to shared libraries into the header 
+of an executable (or another shared library). This RPATH header value 
+(so named in the Executable and Linkable Format header standards) 
+may either override or supplement the system default dynamic linking 
+search paths.
+```
+
+RPATH takes precedence over $LD_LIBRARY_PATH (which is the most commonly used in environment modules)
+
+```text
+LD_LIBRARY_PATH is a colon-separated set of directories where 
+libraries should be searched for first, before the standard set of directories
+```
+---
+
+# How is RPATH support enabled in EasyBuild
+
+From the [official EasyBuild docs](http://easybuild.readthedocs.io/en/latest/RPATH-support.html#implementation)
+
+.small[When EasyBuild is configured to use RPATH, wrapper scripts are put in place for the dynamic linker commands (ld, ld.gold), as well as for every compiler command that is part of the toolchain being used. This is done during the prepare step.
+
+The wrapper scripts will analyze and rewrite the list of arguments supplied to the command they are wrapping as needed, i.e.:
+
+* inject an -rpath argument for every -L argument that specifies a library directory (with some exceptions, see also Filtering RPATH entries via --rpath-filter)
+* lter out arguments that affect RPATH (e.g., --enable-new-dtags)
+* sure that the library subdirectories (lib, /lib64) of the installation directory also have an RPATH entry
+* include additional arguments related to RPATH (e.g. --disable-new-dtags)
+]
+
+---
+
 # Why RPATH
 
 We have many unexperienced users who don't know what `LD_LIBRARY_PATH` is (and don't care at all)
 
 Many of the bioinfo workflows executed in the cluster require to load many modules together. 
 
-Unexperienced users start mixing modules (even if it's no allowed by default) and end up with unpredictable environments
+Unexperienced users start mixing modules (even if it's no allowed by default) and end up with unpredictable environments ... only god knows what libraries they are using.
 
-By using RPATH we assure that if app "X" has been linked with library "Y" that library will be used on runtime, 
+By using RPATH we assure that if app "X" has been linked with library "Y" this library will be used on runtime, 
 no matter what mess the user has done with his/her environment (`LD_LIBRARY_PATH`)
 
 
@@ -264,6 +307,52 @@ We got no tickets or user complains since we enabled the RPATH support in EasyBu
 99% of users haven't noticed the change.
 
 The 1% who noticed it is because I told them
+
+---
+
+# RPATH
+
+## Possible issues? 
+
+Maybe some applications haven't been properly linked with RPATH but we haven't notice it yet
+because we still define `LD_LIBRARY_PATH` in the modules
+
+---
+
+# RPATH
+
+## Possible issues? 
+
+Maybe some applications haven't been properly linked with RPATH but we haven't notice it yet
+because we still define `LD_LIBRARY_PATH` in the modules
+
+## Have you reviewed all your 1400 installations to make sure that RPATH is used in every binary?
+
+---
+
+# RPATH
+
+## Possible issues? 
+
+Maybe some applications haven't been properly linked with RPATH but we haven't notice it yet
+because we still define `LD_LIBRARY_PATH` in the modules
+
+## Have you reviewed all your 1400 installations to make sure that RPATH is used in every binary?
+
+.center[![:scale 30%](img/YaoMingMeme.jpg)]
+.center[NO]
+
+---
+
+# Why RPATH support is still a experimental feature in EasyBuild? 
+
+
+.center[Ask [Kenneth](https://github.com/boegel) ;)]
+
+---
+
+# .center[OTHER QUESTIONS?]
+
 
   </textarea>
   <script src="js/vendor/remark.min.js"></script>
