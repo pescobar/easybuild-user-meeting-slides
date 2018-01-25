@@ -98,6 +98,8 @@ Modules based on Lua: Version 7.4.5  2017-04-04 08:58 -07:00
     by Robert McLay mclay@tacc.utexas.edu
 ```
 
+We use Lmod's cache which is very convenient for speed
+
 ---
 
 # EasyBuild setup
@@ -199,12 +201,14 @@ No modules loaded
   libc.so.6 =&gt; /usr/lib64/libc.so.6 (0x00007f23f47a4000)
   /lib64/ld-linux-x86-64.so.2 (0x000056012848f000)
 ```
+And even if I define a wrong `$LD_LIBRARY_PATH` the right libraries used during compilation
+would be used on runtime
 
 ---
 
 # RPATH advantages
 
-And binaries can be executed even if I don't load any module or define `$LD_LIBRARY_PATH`
+Binaries can be executed even if I don't load any module or define `$LD_LIBRARY_PATH`
 
 ```terminal
 [user@scicore ~] module list
@@ -219,6 +223,8 @@ No modules loaded
 Program: samtools (Tools for alignments in the SAM format)
 Version: 1.3 (using htslib 1.3)
 ```
+Of course for this to work I need to now the full path to the binary because if I don't load the module `$PATH` is not defined
+
 ---
 
 # RPATH exceptions?
@@ -274,13 +280,13 @@ when enabling the RPATH support we can easily identify it.
 
 # RPATH
 
-## And how many new tickets you got since you enabled RPATH ?
+## And how many new tickets I got since I enabled RPATH ?
 
 ---
 
 # RPATH
 
-## And how many new tickets you got since you enabled RPATH ?
+## And how many new tickets I got since I enabled RPATH ?
 
 ### .center[__ZERO__]
 
@@ -288,7 +294,7 @@ when enabling the RPATH support we can easily identify it.
 
 # RPATH
 
-## And how many new tickets you got since you enabled RPATH ?
+## And how many new tickets I got since I enabled RPATH ?
 
 ### .center[__ZERO__]
 
@@ -299,7 +305,7 @@ when enabling the RPATH support we can easily identify it.
 
 # RPATH
 
-## And how many new tickets you got since you enabled RPATH ?
+## And how many new tickets I got since I enabled RPATH ?
 
 We got no tickets or user complains since we enabled the RPATH support in EasyBuild
 
