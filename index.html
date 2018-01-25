@@ -47,7 +47,7 @@ sciCORE / UniBasel / SIB
 
 # My Cluster
 
-  * Scientific computing facility at the University of Basel
+  * [sciCORE - Scientific computing facility at the University of Basel](https://scicore.unibas.ch/) 
   
   * Near ~8k x86_64 CPUs (multiple cpu generations)
 
@@ -105,16 +105,165 @@ Modules based on Lua: Version 7.4.5  2017-04-04 08:58 -07:00
 
   * Main toolchains `goolf/1.7.20` and `intel/2017.01`
 
-  * RPATH enabled by default
+  * [RPATH](http://easybuild.readthedocs.io/en/latest/RPATH-support.html) enabled by default ... since months ago
 ---
 
 # EasyBuild setup
 
 We use gitlab too keep track of installed easyconfigs and notify the admins about new software installations
 
-![:scale 70%](img/gitlab-easybuild.png) 
+.center[![:scale 90%](img/gitlab-easybuild.png)]
 
 ---
+
+# Why RPATH
+
+We have many unexperienced users who don't know what `LD_LIBRARY_PATH` is (and don't care at all)
+
+Many of the bioinfo workflows executed in the cluster require to load many modules together. 
+
+Unexperienced users start mixing modules (even if it's no allowed by default) and end up with unpredictable environments
+
+By using RPATH we assure that if app "X" has been linked with library "Y" that library will be used on runtime, 
+no matter what mess the user has done with his/her environment (`LD_LIBRARY_PATH`)
+
+
+---
+
+# RPATH advantages
+
+I don't need `$LD_LIBRARY_PATH` to find the proper libraries: 
+
+```terminal
+[user@scicore ~] module list
+No modules loaded
+
+[user@scicore ~] echo $LD_LIBRARY_PATH
+
+[user@scicore ~]
+```
+
+
+```terminal
+[user@scicore ~] ldd /scicore/soft/apps/SAMtools/1.3-goolf-1.7.20/bin/samtools
+  linux-vdso.so.1 =&gt;  (0x00007f23f5717000)
+  libncursesw.so.6 =&gt; /scicore/soft/apps/ncurses/5.9-goolf-1.7.20/lib/libncursesw.so.6 (0x00007f23f54ae000)
+  libm.so.6 =&gt; /usr/lib64/libm.so.6 (0x00007f23f519c000)
+  libz.so.1 =&gt; /scicore/soft/apps/zlib/1.2.8-goolf-1.7.20/lib/libz.so.1 (0x00007f23f4f86000)
+  libdl.so.2 =&gt; /usr/lib64/libdl.so.2 (0x00007f23f4d82000)
+  libpthread.so.0 =&gt; /usr/lib64/libpthread.so.0 (0x00007f23f4b66000)
+  libc.so.6 =&gt; /usr/lib64/libc.so.6 (0x00007f23f47a4000)
+  /lib64/ld-linux-x86-64.so.2 (0x000056012848f000)
+```
+
+---
+
+# RPATH advantages
+
+And binaries can be executed even if I don't load any module or define `$LD_LIBRARY_PATH`
+
+```terminal
+[user@scicore ~] module list
+No modules loaded
+
+[user@scicore ~] echo $LD_LIBRARY_PATH
+
+[user@scicore ~]
+```
+
+```terminal
+[user@scicore ~] /scicore/soft/apps/SAMtools/1.3-goolf-1.7.20/bin/samtools --help | head -3
+
+Program: samtools (Tools for alignments in the SAM format)
+Version: 1.3 (using htslib 1.3)
+```
+---
+
+# RPATH exceptions?
+
+There are few applications which I have to build without RPATH enabled in easybuild.
+
+For those I use `toolchainopts = {'rpath': False}`
+
+Right now we only have 7 exceptions in the cluster:
+
+```terminal
+[user@scicore installed_easyconfigs] grep -R "{'rpath': False}" * | wc -l
+7
+```
+
+Most of those apps provide 'exotic' build systems where injecting the RPATH flags require some test and debug.
+
+They can probably be fixed to be built with RPATH but IMHO it's not worth the time.
+
+---
+
+# RPATH
+
+## So you don't need $LD_LIBRARY_PATH at all ?
+
+Well....yes and no....
+
+You don't need `$LD_LIBRARY_PATH` for applications in the cluster software stack  __built with easybuild__ 
+but many users still want to compile their own code on top of the cluster software stack and they don't use easybuild
+
+That's why all our modules still provide `$LD_LIBRARY_PATH` (runtime) and `$LIBRARY_PATH` (build time)
+
+```terminal
+[user@scicore ~] ml --redirect show SAMtools/1.3.1-goolf-1.7.20 | grep LIBRARY_PATH
+
+prepend_path("LD_LIBRARY_PATH","/scicore/soft/apps/SAMtools/1.3.1-goolf-1.7.20/lib")
+prepend_path("LIBRARY_PATH","/scicore/soft/apps/SAMtools/1.3.1-goolf-1.7.20/lib")
+```
+---
+
+# RPATH 
+
+## And what problems I found? 
+
+Sometimes (not often) enabling the RPATH support in easybuild can introduce "obscure" errors
+
+We do all the test installations and easyconfigs development with user "easybuild" __without RPATH enabled__
+
+We only enable RPATH when deploying to production with "soft" user. This way if the problem was introduced
+when enabling the RPATH support we can easily identify it.
+
+---
+
+# RPATH
+
+## And how many new tickets you got since you enabled RPATH ?
+
+---
+
+# RPATH
+
+## And how many new tickets you got since you enabled RPATH ?
+
+### .center[__ZERO__]
+
+---
+
+# RPATH
+
+## And how many new tickets you got since you enabled RPATH ?
+
+### .center[__ZERO__]
+
+.center[![:scale 40%](img/seriously.jpg)]
+.center[seriously?]
+
+---
+
+# RPATH
+
+## And how many new tickets you got since you enabled RPATH ?
+
+We got no tickets or user complains since we enabled the RPATH support in EasyBuild
+
+99% of users haven't noticed the change.
+
+The 1% who noticed it is because I told them
 
   </textarea>
   <script src="js/vendor/remark.min.js"></script>
