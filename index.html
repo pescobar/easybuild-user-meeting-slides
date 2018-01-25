@@ -255,7 +255,7 @@ Well....yes and no....
 You don't need `$LD_LIBRARY_PATH` for applications in the cluster software stack  __built with easybuild and RPATH support enabled__ 
 but many users still want to compile their own code on top of the cluster software stack and they don't use easybuild (neither use RPATH "manually")
 
-That's why all our modules still provide `$LD_LIBRARY_PATH` (runtime) and `$LIBRARY_PATH` (build time)
+That's why all our modules still provide `$LD_LIBRARY_PATH` (runtime library search) and `$LIBRARY_PATH` (build time library search)
 
 ```terminal
 [user@scicore ~] ml --redirect show SAMtools/1.3.1-goolf-1.7.20 | grep LIBRARY_PATH
