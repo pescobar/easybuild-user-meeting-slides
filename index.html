@@ -82,11 +82,11 @@ January 2018 Amsterdam
 
 # My Cluster
 
-### Near 1500 modules created with easybuild (lua format)
+### Near 1k modules created with easybuild (lua format)
 
 ```terminal
-[user@scicore ~]$ find /scicore/soft/modules/all/ *.lua | wc -l 
-1475
+[user@scicore ~]$ find /scicore/soft/modules/all/ -type f -iname *.lua | wc -l
+963
 ```
 
 ### Lmod for modules management
@@ -330,7 +330,7 @@ because we still define `LD_LIBRARY_PATH` in the modules
 Maybe some applications haven't been properly linked with RPATH but we haven't notice it yet
 because we still define `LD_LIBRARY_PATH` in the modules
 
-## Have you reviewed all your 1400 installations to make sure that RPATH is used in every binary?
+## Have you reviewed all your 1000 installations to make sure that RPATH is used in every binary?
 
 ---
 
