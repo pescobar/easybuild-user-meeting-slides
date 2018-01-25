@@ -252,8 +252,8 @@ They can probably be fixed to be built with RPATH but IMHO it's not worth the ef
 
 Well....yes and no....
 
-You don't need `$LD_LIBRARY_PATH` for applications in the cluster software stack  __built with easybuild__ 
-but many users still want to compile their own code on top of the cluster software stack and they don't use easybuild
+You don't need `$LD_LIBRARY_PATH` for applications in the cluster software stack  __built with easybuild and RPATH support enabled__ 
+but many users still want to compile their own code on top of the cluster software stack and they don't use easybuild (neither use RPATH "manually")
 
 That's why all our modules still provide `$LD_LIBRARY_PATH` (runtime) and `$LIBRARY_PATH` (build time)
 
